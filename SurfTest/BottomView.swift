@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol BottomViewDelegate: AnyObject {
+    func didTappedSendApplicationButton()
+}
+
 final class BottomView: UIView {
+    
+    weak var delegate: BottomViewDelegate?
     
     lazy var sendRequestButton: UIButton = {
         let button = UIButton(type: .system)
@@ -57,12 +63,7 @@ final class BottomView: UIView {
     
     @objc
     private func onButtonTapped(_ sender: UIButton) {
-//        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-//        appDelegate?.showAlert(
-//            title: R.string.localization.primaryButtonAlertTitle(),
-//            message: R.string.localization.primaryButtonAlertMessage(),
-//            actionTitle: R.string.localization.primaryButtonAlertActionTitle()
-//        )
+        delegate?.didTappedSendApplicationButton()
     }
 }
 

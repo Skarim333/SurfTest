@@ -19,7 +19,7 @@ class MainViewController: UIViewController {
         view.contentMode = .scaleAspectFill
         return view
     }()
-    let items = Constan.items
+    var items = Constan.items
     let scrollView = UIScrollView()
 
     override func viewDidLoad() {
@@ -31,12 +31,11 @@ class MainViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(mainView)
         view.addSubview(bottomView)
-//        view.addSubview(mainView)
         mainView.carouselCollectionView.delegate = self
         mainView.carouselCollectionView.dataSource = self
         mainView.doubleCarouselCollectionView.delegate = self
         mainView.doubleCarouselCollectionView.dataSource = self
-        
+        bottomView.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -50,7 +49,6 @@ class MainViewController: UIViewController {
         scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height-50)
         mainView.frame = CGRect(x: 0, y: 600, width: view.frame.width, height: view.frame.height)
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 1.5)
-//        mainView.frame = CGRect(x: 0, y: 50, width: view.width, height: view.height-120)
         bottomView.frame = CGRect(x: 0, y: view.height-120, width: view.width, height: 120)
     }
     
@@ -62,6 +60,14 @@ class MainViewController: UIViewController {
     
 }
 
+extension MainViewController: BottomViewDelegate {
+    func didTappedSendApplicationButton() {
+        let alertController = UIAlertController(title: "Поздравляем!", message: "Ваша заявка успешно отправлена!", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Закрыть", style: .default)
+        alertController.addAction(action)
+        present(alertController, animated: true)
+    }
+}
 
 extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -82,19 +88,7 @@ extension MainViewController: UICollectionViewDataSource {
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        // Deselect all previous items, if any
         if collectionView == mainView.carouselCollectionView {
-            if let previousIndex = previousIndex {
-                for item in 0...500 {
-                    if (item % items.count) == (
-                        previousIndex.item % items.count) {
-                        let indexPath = IndexPath(item: item, section: 0)
-                        collectionView.deselectItem(at: indexPath, animated: true)
-                    }
-                }
-            }
-            
-            // Select all new elements
             for item in 0...500 {
                 if (item % items.count) == (indexPath.item % items.count) {
                     let indexPath = IndexPath(item: item, section: 0)
@@ -108,31 +102,19 @@ extension MainViewController: UICollectionViewDelegate {
         
         if collectionView == mainView.doubleCarouselCollectionView {
             isSelect = true
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        // Deselect item when scroll item is select
-        if collectionView == mainView.carouselCollectionView {
-            if let previousIndex = previousIndex {
-                for item in 0...500 {
-                    if (item % items.count) == (previousIndex.item % items.count) {
-                        let indexPath = IndexPath(item: item, section: 0)
-                        collectionView.deselectItem(at: indexPath, animated: true)
-                        isSelect = false
-                    }
-                }
+            collectionView.performBatchUpdates {
+                let selectCell = items[indexPath.item % items.count]
+                items.remove(at: indexPath.item)
+                items.insert(selectCell, at: 0)
+                mainView.doubleCarouselCollectionView.moveItem(
+                    at: indexPath,
+                    to: [0, 0]
+                    )
             }
         }
-        
-        if collectionView == mainView.doubleCarouselCollectionView {
-            isSelect = false
-        }
     }
-}
-
-extension MainViewController: UICollectionViewDelegateFlowLayout {
     
 }
+
 
 

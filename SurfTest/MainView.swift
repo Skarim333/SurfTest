@@ -45,8 +45,6 @@ final class MainView: UIView {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = Color.white
         collectionView.allowsMultipleSelection = true
-//        collectionView.backgroundColor = .blue
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
@@ -60,8 +58,6 @@ final class MainView: UIView {
         collectionView.backgroundColor = Color.white
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.allowsMultipleSelection = true
-//        collectionView.backgroundColor = .red
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
@@ -73,6 +69,7 @@ final class MainView: UIView {
         addSubview(infoTitleLabel)
         addSubview(infoTitleLabel2)
         backgroundColor = .white
+        
     }
     
     required init?(coder: NSCoder) {
@@ -85,8 +82,26 @@ final class MainView: UIView {
         carouselCollectionView.frame = CGRect(x: left, y: infoTitleLabel.bottom+12, width: width, height: 50)
         infoTitleLabel2.frame = CGRect(x: 20, y: carouselCollectionView.bottom+24, width: width-40, height: 40)
         doubleCarouselCollectionView.frame = CGRect(x: left, y: infoTitleLabel2.bottom+12, width: width, height: 100)
+        layer.cornerRadius = 30
     }
     
 }
-
+extension Metrics {
+    static let buttonCornerRadius: CGFloat = 30
+    static let containerViewCornerRadius: CGFloat = 25
+    static let titleLabelTop: CGFloat = 24
+    static let titleLabelLeading: CGFloat = 20
+    static let infoLabelTop: CGFloat = 12
+    static let infoLabelLeadingTrailing: CGFloat = 20
+    static let carouselsTop: CGFloat = 12
+    static let carouselHeight: CGFloat = 50
+    static let awardLabelTop: CGFloat = 24
+    static let awardLabelLeadingTrailing: CGFloat = 20
+    static let doubleCarouselHeight: CGFloat = 100
+    static let wantToJoinUsLabelTop: CGFloat = 20
+    static let sendRequestButtonTrailing: CGFloat = -20
+    static let sendRequestButtonHeight: CGFloat = 60
+    static let sendRequestButtonWidth: CGFloat = 219
+    static let sendRequestButtonBottom: CGFloat = -58
+}
 

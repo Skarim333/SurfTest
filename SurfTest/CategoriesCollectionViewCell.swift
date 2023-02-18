@@ -40,6 +40,11 @@ final class CategoriesCollectionViewCell: UICollectionViewCell {
         setupLayout()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        categoriesLabel.text = nil
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -52,7 +57,7 @@ final class CategoriesCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupHierarchy() {
-        contentView.addSubview(categoriesLabel)
+        addSubview(categoriesLabel)
     }
     
     private func setupLayout() {

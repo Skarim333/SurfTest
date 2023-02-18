@@ -9,7 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let scrollView = UIScrollView()
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isDirectionalLockEnabled = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.contentInsetAdjustmentBehavior = .never
+        return scrollView
+    }()
     let imageView = UIImageView()
     let viewA = UIView()
     let submitApplicationLabel = UILabel()

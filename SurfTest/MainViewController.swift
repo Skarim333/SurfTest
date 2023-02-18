@@ -9,13 +9,14 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    private let mainIView = MainView()
+    private let mainView = MainView()
     private let bottomView = BottomView()
+    private var isSelect = false
+    private var previousIndex: IndexPath?
     private let backgroundImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "background")
         view.contentMode = .scaleAspectFill
-//        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     let items = Constan.items
@@ -25,44 +26,46 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         scrollView.delegate = self
         scrollView.backgroundColor = .clear
+        scrollView.showsVerticalScrollIndicator = false
         view.addSubview(backgroundImageView)
         view.addSubview(scrollView)
-        scrollView.addSubview(mainIView)
+        scrollView.addSubview(mainView)
         view.addSubview(bottomView)
-        mainIView.carouselCollectionView.delegate = self
-        mainIView.carouselCollectionView.dataSource = self
-        mainIView.doubleCarouselCollectionView.delegate = self
-        mainIView.doubleCarouselCollectionView.dataSource = self
+//        view.addSubview(mainView)
+        mainView.carouselCollectionView.delegate = self
+        mainView.carouselCollectionView.dataSource = self
+        mainView.doubleCarouselCollectionView.delegate = self
+        mainView.doubleCarouselCollectionView.dataSource = self
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         let indexPath = IndexPath(item: 500/2, section: 0)
-        mainIView.carouselCollectionView.scrollToItem(at: indexPath, at: .left, animated: false)
+        mainView.carouselCollectionView.scrollToItem(at: indexPath, at: .left, animated: false)
     }
     
     override func viewDidLayoutSubviews() {
         backgroundImageView.frame = view.bounds
         scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height-50)
-        mainIView.frame = CGRect(x: 0, y: 600, width: view.frame.width, height: view.frame.height)
+        mainView.frame = CGRect(x: 0, y: 600, width: view.frame.width, height: view.frame.height)
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 1.5)
-//        mainIView.frame = CGRect(x: 0, y: 50, width: view.width, height: view.height-120)
+//        mainView.frame = CGRect(x: 0, y: 50, width: view.width, height: view.height-120)
         bottomView.frame = CGRect(x: 0, y: view.height-120, width: view.width, height: 120)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.bounds.height {
+            scrollView.contentOffset.y = scrollView.contentSize.height - scrollView.bounds.height
+        }
     }
     
 }
 
-extension MainViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let ds = scrollView.contentOffset.y + scrollView.frame.origin.y
-        let bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height
-        if bottomEdge >= scrollView.contentSize.height {
-            scrollView.setContentOffset(CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.frame.size.height), animated: false)
-        } else if ds <= scrollView.frame.origin.y {
-            scrollView.setContentOffset(CGPoint(x: 0, y: scrollView.frame.origin.y), animated: false)
-        }
-    }
-}
 
-extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        collectionView == mainIView.carouselCollectionView ? 500 : items.count
+        collectionView == mainView.carouselCollectionView ? 500 : items.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -73,17 +76,63 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         cell.categoriesLabel.text = items[elementIndex]
         return cell
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let screenWidth = collectionView.frame.width
-        let numberOfCellsPerRow = 2
-        let cellWidth = (screenWidth - (CGFloat(numberOfCellsPerRow - 1) * 12)) / CGFloat(numberOfCellsPerRow)
+
+}
+
+extension MainViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if cellWidth <= 0 {
-            return .zero
-        } else {
-            return CGSize(width: cellWidth, height: 44)
+        // Deselect all previous items, if any
+        if collectionView == mainView.carouselCollectionView {
+            if let previousIndex = previousIndex {
+                for item in 0...500 {
+                    if (item % items.count) == (
+                        previousIndex.item % items.count) {
+                        let indexPath = IndexPath(item: item, section: 0)
+                        collectionView.deselectItem(at: indexPath, animated: true)
+                    }
+                }
+            }
+            
+            // Select all new elements
+            for item in 0...500 {
+                if (item % items.count) == (indexPath.item % items.count) {
+                    let indexPath = IndexPath(item: item, section: 0)
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                    isSelect = true
+                }
+            }
+            previousIndex = indexPath
+            collectionView.scrollToItem(at: indexPath, at: .left, animated: true)
+        }
+        
+        if collectionView == mainView.doubleCarouselCollectionView {
+            isSelect = true
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        // Deselect item when scroll item is select
+        if collectionView == mainView.carouselCollectionView {
+            if let previousIndex = previousIndex {
+                for item in 0...500 {
+                    if (item % items.count) == (previousIndex.item % items.count) {
+                        let indexPath = IndexPath(item: item, section: 0)
+                        collectionView.deselectItem(at: indexPath, animated: true)
+                        isSelect = false
+                    }
+                }
+            }
+        }
+        
+        if collectionView == mainView.doubleCarouselCollectionView {
+            isSelect = false
+        }
+    }
+}
+
+extension MainViewController: UICollectionViewDelegateFlowLayout {
+    
 }
 
 

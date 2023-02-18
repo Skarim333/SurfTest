@@ -19,7 +19,6 @@
 		5D448913299A892400A273D8 /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D448912299A892400A273D8 /* UIView + Extension.swift */; };
 		5D448925299A945400A273D8 /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D448924299A945400A273D8 /* BottomView.swift */; };
 		5D448927299A96B700A273D8 /* UIFont + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D448926299A96B600A273D8 /* UIFont + Extension.swift */; };
-		5D448929299AA27400A273D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D448928299AA27400A273D8 /* ViewController.swift */; };
 		5D44892B299ABE7600A273D8 /* Constan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D44892A299ABE7600A273D8 /* Constan.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +40,6 @@
 		5D448923299A943700A273D8 /* SFProDisplay-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SFProDisplay-Medium.ttf"; path = "../../../SurfTask-master/SurfTask/Resourses/Fonts/SFProDisplay-Medium.ttf"; sourceTree = "<group>"; };
 		5D448924299A945400A273D8 /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
 		5D448926299A96B600A273D8 /* UIFont + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont + Extension.swift"; sourceTree = "<group>"; };
-		5D448928299AA27400A273D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5D44892A299ABE7600A273D8 /* Constan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constan.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,7 +76,6 @@
 				5D4488F2299A7F5100A273D8 /* AppDelegate.swift */,
 				5D4488F4299A7F5100A273D8 /* SceneDelegate.swift */,
 				5D448906299A810300A273D8 /* MainViewController.swift */,
-				5D448928299AA27400A273D8 /* ViewController.swift */,
 				5D448908299A820500A273D8 /* MainView.swift */,
 				5D448924299A945400A273D8 /* BottomView.swift */,
 				5D44890A299A822900A273D8 /* CategoriesCollectionViewCell.swift */,
@@ -181,7 +178,6 @@
 				5D44892B299ABE7600A273D8 /* Constan.swift in Sources */,
 				5D4488F3299A7F5100A273D8 /* AppDelegate.swift in Sources */,
 				5D448909299A820500A273D8 /* MainView.swift in Sources */,
-				5D448929299AA27400A273D8 /* ViewController.swift in Sources */,
 				5D448911299A843B00A273D8 /* Color.swift in Sources */,
 				5D4488F5299A7F5100A273D8 /* SceneDelegate.swift in Sources */,
 				5D448913299A892400A273D8 /* UIView + Extension.swift in Sources */,

@@ -17,7 +17,7 @@ final class BottomView: UIView {
     
     lazy var sendRequestButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constan.sendButtonTitle, for: .normal)
+        button.setTitle(Constant.sendButtonTitle, for: .normal)
         button.titleLabel?.font = .sfProDisplayMedium(size: 16)
         button.backgroundColor = Color.lightBlack
         button.setTitleColor(Color.white, for: .normal)
@@ -28,7 +28,7 @@ final class BottomView: UIView {
     
     private lazy var sendDescription: UILabel = {
         let label = UILabel()
-        label.text = Constan.sendLabelTitle
+        label.text = Constant.sendLabelTitle
         label.font = .sfProDisplayMedium(size: 14)
         label.textColor = Color.gray
         return label

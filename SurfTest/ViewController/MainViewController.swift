@@ -19,45 +19,102 @@ class MainViewController: UIViewController {
         view.contentMode = .scaleAspectFill
         return view
     }()
-    var items = Constan.items
-    let scrollView = UIScrollView()
+    var items = Constant.items
+    private var currentContainerHeight = Constants.currentContainerHeight
+    private let defaultHeight = Constants.defaultHeight
+    private let maximumContainerHeight = Constants.maximumContainerHeight
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        scrollView.delegate = self
-        scrollView.backgroundColor = .clear
-        scrollView.showsVerticalScrollIndicator = false
+        setupUI()
+    }
+    
+    private func setupUI() {
         view.addSubview(backgroundImageView)
-        view.addSubview(scrollView)
-        scrollView.addSubview(mainView)
+        view.addSubview(mainView)
         view.addSubview(bottomView)
         mainView.carouselCollectionView.delegate = self
         mainView.carouselCollectionView.dataSource = self
         mainView.doubleCarouselCollectionView.delegate = self
         mainView.doubleCarouselCollectionView.dataSource = self
         bottomView.delegate = self
+        setupPanGesture()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.mainView.frame = CGRect(x: 0, y: self.view.height, width: self.view.width, height: 0)
+        self.mainView.layoutIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        animatePresentContainer()
         let indexPath = IndexPath(item: 500/2, section: 0)
         mainView.carouselCollectionView.scrollToItem(at: indexPath, at: .left, animated: false)
     }
     
     override func viewDidLayoutSubviews() {
         backgroundImageView.frame = view.bounds
-        scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height-50)
-        mainView.frame = CGRect(x: 0, y: 600, width: view.frame.width, height: view.frame.height)
-        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 1.5)
+
         bottomView.frame = CGRect(x: 0, y: view.height-120, width: view.width, height: 120)
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.bounds.height {
-            scrollView.contentOffset.y = scrollView.contentSize.height - scrollView.bounds.height
+    private func setupPanGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handlePanGesture(gesture:)))
+        panGesture.delaysTouchesBegan = false
+        panGesture.delaysTouchesEnded = false
+        view.addGestureRecognizer(panGesture)
+    }
+    @objc private func handlePanGesture(gesture: UIPanGestureRecognizer) {
+        
+        let translation = gesture.translation(in: view)
+        let isDraggingDown = translation.y > 0
+        let newHeight = currentContainerHeight - translation.y
+        
+        switch gesture.state {
+        case .changed:
+            if newHeight > maximumContainerHeight {
+                animateContainerHeight(maximumContainerHeight)
+            }
+        case .ended:
+            if newHeight < maximumContainerHeight && isDraggingDown {
+                animateContainerHeight(defaultHeight)
+            }
+            else if newHeight > defaultHeight && !isDraggingDown {
+                UIView.animate(withDuration: 0.3, delay: 0.1) {
+                    self.mainView.frame = CGRect(x: 0, y: 50, width: self.view.width, height: self.view.height)
+                    self.mainView.layoutIfNeeded()
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    self.mainView.infoTitleLabel2.isHidden = false
+                    self.mainView.doubleCarouselCollectionView.isHidden = false
+                }
+            }
+        default:
+            break
         }
     }
-    
+    private func animateContainerHeight(_ height: CGFloat) {
+        UIView.animate(withDuration: 0.4) {
+            self.mainView.frame = CGRect(x: 0, y: self.view.height, width: self.view.width, height: -height)
+            self.mainView.layoutIfNeeded()
+        }
+        currentContainerHeight = height
+        
+        self.mainView.infoTitleLabel2.isHidden = true
+        self.mainView.doubleCarouselCollectionView.isHidden = true
+    }
+    private func animatePresentContainer() {
+        UIView.animate(withDuration: 0.2) {
+            self.mainView.frame = CGRect(x: 0, y: self.view.height, width: self.view.width, height: -330)
+            self.mainView.layoutIfNeeded()
+        }
+        mainView.isHidden = false
+        mainView.infoTitleLabel2.isHidden = true
+        mainView.doubleCarouselCollectionView.isHidden = true
+    }
 }
 
 extension MainViewController: BottomViewDelegate {
@@ -116,5 +173,10 @@ extension MainViewController: UICollectionViewDelegate {
     
 }
 
+enum Constants {
+    static let currentContainerHeight: CGFloat = UIScreen.main.bounds.height * 0.5
+    static let defaultHeight: CGFloat = 330
+    static let maximumContainerHeight: CGFloat = UIScreen.main.bounds.height - 50
+}
 
 

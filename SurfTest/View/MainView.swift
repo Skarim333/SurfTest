@@ -11,7 +11,7 @@ final class MainView: UIView {
     
     let mainTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constan.mainTitle
+        label.text = Constant.mainTitle
         label.font = .sfProDisplayBold(size: 24)
         label.textColor = Color.lightBlack
         return label
@@ -19,7 +19,7 @@ final class MainView: UIView {
     
     let infoTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constan.infoTitle
+        label.text = Constant.infoTitle
         label.font = .sfProDisplayMedium(size: 14)
         label.numberOfLines = 0
         label.textColor = Color.gray
@@ -28,7 +28,7 @@ final class MainView: UIView {
     
     let infoTitleLabel2: UILabel = {
         let label = UILabel()
-        label.text = Constan.infoTitle2
+        label.text = Constant.infoTitle2
         label.font = .sfProDisplayMedium(size: 14)
         label.numberOfLines = 0
         label.textColor = Color.gray
